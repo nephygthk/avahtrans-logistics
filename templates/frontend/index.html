@@ -9,12 +9,25 @@
         <h1 class="text-primar mb-4">Safe & Faster</h1>
         <h1 class="text-white display-3 mb-5">Logistics Services</h1>
         <div class="mx-auto" style="width: 100%; max-width: 600px;">
-            <div class="input-group">
-                <input type="text" class="form-control border-light" style="padding: 30px;" placeholder="Tracking Id">
-                <div class="input-group-append">
-                    <button class="btn btn-primary text-white px-3">Track Package</button>
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{message}}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <form action="{% url 'frontend:tracking' %}" method="POST">
+                {% csrf_token %}
+                <div class="input-group">
+                    <input name="tracking_code" type="text" class="form-control border-light" style="padding: 30px;" placeholder="Tracking Id">
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary text-white px-3">Track Package</button>
+                    </div>
                 </div>
-            </div>
+
+            </form>
+            
         </div>
     </div>
 </div>

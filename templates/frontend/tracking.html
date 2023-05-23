@@ -16,4 +16,99 @@
 </div>
 <!-- Header End -->
 
+<!-- tracking info -->
+<div class="container">
+    <div class="row align-item-center justify-content-center">
+        <div class="col-md-11">
+            <div class="card shadow">
+                <div class="card-header bg-dark text-white">Tracking Information</div>
+                <div class="card-body">
+                    <!-- <div class="row">
+                        <div class="col-md-4">
+                            <h5 class="fw-bold text-success"><i class="fa-regular fa-star"></i>Turygsss</h5>
+                        </div>
+                    </div> -->
+                    {% for shipment in shipments%}
+                    <div class="row  text-white">
+                        <div class="col-md-6"></div>
+                        <div class="col-md-6">
+                            <div class="card shadow-lg">
+                                <h6 class="card-title bg-info py-2 fw-bold text-white px-3">Live Update</h6>
+                                <div class="card-body text-dark py-0 text-center">
+                                    <h5 class="text-success">{{shipment.status}}</h5>
+                                    <p class="small">{{shipment.comment}}</p>
+                                    <h6>{{shipment.updated}}</h6>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="row py-5 align-item-center justify-content-center">
+                        <div class="col-md-10">
+                            <div class="table-responsive">
+                                
+                                <table class="table table-info text-dark table-bordered border-primary">
+                                    <tbody>
+                                      <tr> 
+                                        <td class="col-4">TRACKING NUMBER</td>
+                                        <td class="col-8 text-primary"><strong>{{shipment.tracking_number}}</strong> </td>
+                                      </tr>
+                                      <tr> 
+                                        <td class="col-4">SENDER NAME</td>
+                                        <td class="col-8">{{shipment.sender_name}}</td>
+                                      </tr>
+                                      <tr> 
+                                        <td class="col-4">SENDER NATIONALITY</td>
+                                        <td class="col-8">{{shipment.sender_nationality}}</td>
+                                      </tr>
+                                      <tr> 
+                                        <td class="col-4">SENDER LOCATION</td>
+                                        <td class="col-8">{{shipment.sender_location}}</td>
+                                      </tr>
+                                      <tr> 
+                                        <td class="col-4">RECEIVER NAME</td>
+                                        <td class="col-8">{{shipment.receiver_name}}</td>
+                                      </tr>
+                                      <tr> 
+                                        <td class="col-4">RECEIVER ADDRESS</td>
+                                        <td class="col-8">{{shipment.receiver_address}}</td>
+                                      </tr>
+                                      <tr> 
+                                        <td class="col-4">RECEIVER PHONE</td>
+                                        <td class="col-8">{{shipment.receiver_phone}}</td>
+                                      </tr>
+                                      <tr> 
+                                        <td class="col-4">RECEIVER EMAIL</td>
+                                        <td class="col-8">{{shipment.receiver_email}}</td>
+                                      </tr>
+                                      <tr> 
+                                        <td class="col-4">SHIPMENT WEIGHT</td>
+                                        <td class="col-8">{{shipment.weight}}</td>
+                                      </tr>
+                                      <tr> 
+                                        <td class="col-4">SHIPMENT LOCATION</td>
+                                        <td class="col-8"><strong>{{shipment.shipment_location}}</strong></td>
+                                      </tr>
+                                      <tr> 
+                                        <td class="col-4">STATUS</td>
+                                        <td class="col-8 text-success"><strong>{{shipment.status}}</strong> </td>
+                                      </tr>
+                                      <tr> 
+                                        <td class="col-4">COMMENT</td>
+                                        <td class="col-8">{{shipment.comment}}</td>
+                                      </tr>
+                                    </tbody>
+                                </table>
+                                
+                            </div>
+                            
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
