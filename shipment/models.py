@@ -18,6 +18,7 @@ class Shipment(models.Model):
     shipment_location = models.CharField(max_length=100, null=True, blank=True)
     comment = models.TextField(max_length=100, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
         if self.tracking_number == None or self.tracking_number == '':

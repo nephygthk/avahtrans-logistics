@@ -4,6 +4,9 @@ from . import views
 app_name = 'shipment'
 
 urlpatterns = [
+    path('login/', views.loginUser, name='login'),
+    path('logout/', views.logoutUser, name='logout'),
+
     path('dashboard/', views.DashboardView.as_view(), name='dashboard'),
     path('add_shipment/', views.CreateShipmentView.as_view(), name='add_shipment'),
     path('update_shipment/<pk>/', views.update_shipment, name='update_shipment'),
