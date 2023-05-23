@@ -1,0 +1,84 @@
+{% extends './base.html' %}
+
+{% load static %}
+
+{% block sub_content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card shadow card-sm bg-secondary text-white">
+          {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{message}}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <div class="card-body">
+                <table class="table text-light  table-borderless table-sm">
+                    <thead class="text-success">
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Sender Name</th>
+                        <th scope="col">Receiver Name</th>
+                        <th scope="col">Receiver Email</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Tracking Code</th>
+                        <th scope="col">Date Created</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                      </tr>
+                    </thead>
+                    {% for shipment in shipments %}
+                    <tbody>
+                      <tr>
+                        <th scope="row">{{forloop.counter}}</th>
+                        <td >{{shipment.sender_name}}</td>
+                        <td>{{shipment.receiver_name}}</td>
+                        <td>{{shipment.receiver_email}}</td>
+                        <td class="text-info"><strong>{{shipment.status}}</strong></td>
+                        <td><strong>{{shipment.tracking_number}}</strong> </td>
+                        <td>{{shipment.created}}</td>
+                        <td><a href="{% url 'shipment:update_shipment' shipment.id %}" class="btn btn-info btn-sm fw-bold text-white">Update</a></td>
+                        <td><a href="{% url 'shipment:delete_shipment' shipment.id %}" class="btn btn-danger btn-sm fw-bold">Delete</a></td>
+                      </tr>
+                    </tbody>
+                    {% endfor %}
+                  </table>
+                  <!-- <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                      <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                      <li class="page-item"><a class="page-link" href="#">1</a></li>
+                      <li class="page-item"><a class="page-link" href="#">2</a></li>
+                      <li class="page-item"><a class="page-link" href="#">3</a></li>
+                      <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                    </ul>
+                  </nav> -->
+                  <!-- pagination -->
+                  <div class="pagination">
+                    <span class="step-links">
+                        {% if page_obj.has_previous %}
+                            <a href="?page=1">&laquo; first</a>
+                            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                        {% endif %}
+                
+                        <span class="current">
+                            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                        </span>
+                
+                        {% if page_obj.has_next %}
+                            <a href="?page={{ page_obj.next_page_number }}">next</a>
+                            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- <div class="col-md-2">
+        <div class="card shadow-lg bg-secondary text-white">
+            <h1>hi world</h1>
+        </div>
+    </div> -->
+</div>
+{% endblock %}

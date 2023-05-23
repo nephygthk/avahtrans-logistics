@@ -1,0 +1,13 @@
+
+
+.bg-dark{
+    background-color: rgb(14, 14, 15) !important;
+}
+
+.bg-secondary{
+    background-color: rgb(21, 21, 22) !important;
+}
+
+.text-success{
+    color: #3cdb20 !important;
+}
