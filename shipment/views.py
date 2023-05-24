@@ -9,10 +9,12 @@ from django.views.generic.list import ListView
 from django.views.generic import CreateView
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
+from django.db.models import Q
 
 
-from .models import Shipment
-from .forms import ShipmentCreateForm, ShipmentUpdateForm
+
+from .models import Package, Shipment
+from .forms import ShipmentCreateForm, ShipmentUpdateForm, PackageCreateForm, PackageUpdateForm
 
 def loginUser(request):
     if request.method == "POST":
@@ -23,9 +25,8 @@ def loginUser(request):
 
         if user is not None:
             if user.is_staff:
-                pass
                 login(request, user)
-                return redirect('shipment:dashboard')
+                return redirect('shipment:n_dashboard')
             else:
                 login(request, user)
                 return redirect('shipment:dashboard')
@@ -76,9 +77,9 @@ class CreateShipmentView(LoginRequiredMixin, CreateView):
             send_my_email("Shipment location update", message, [saved_shipment.receiver_email])
         except:
             pass
-
-        messages.success(self.request, 'Your shipment is added successfully')
-        return HttpResponseRedirect(reverse_lazy('shipment:add_shipment'))
+        finally:
+            messages.success(self.request, 'Your shipment is added successfully')
+            return HttpResponseRedirect(reverse_lazy('shipment:add_shipment'))
     
 
 @login_required(login_url='shipment:login')
@@ -117,3 +118,50 @@ def delete_shipment(request, pk):
 def logoutUser(request):
 	logout(request)
 	return redirect('shipment:login')
+
+
+
+# neph side
+
+class NDashboardView(LoginRequiredMixin, ListView):
+    model = Package
+    template_name = 'package/n_dashboard.html'
+    context_object_name = 'packages'
+    paginate_by = 15
+
+    def get_queryset(self, *args, **kwargs):
+        qs = super(NDashboardView, self).get_queryset(*args, **kwargs)
+        qs = qs.order_by("-created")
+        return qs
+    
+
+class NCreateShipmentView(LoginRequiredMixin, CreateView):
+    template_name = 'package/add_package.html'
+    form_class = PackageCreateForm
+
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, 'Your package is added successfully')
+        return HttpResponseRedirect(reverse_lazy('shipment:add_package'))
+
+
+
+@login_required(login_url='shipment:login')
+def update_package(request, pk):
+    package = Package.objects.get(pk=pk)
+    form = PackageUpdateForm(request.POST or None, instance=package)
+    if form.is_valid():
+        form.save()
+        
+        messages.success(request, 'Package is updated successfully')
+        return redirect('shipment:n_dashboard')
+
+    return render(request, 'package/update_package.html', {'form':form})
+
+
+@login_required(login_url='shipment:login')
+def delete_package(request, pk):
+    package = Package.objects.get(pk=pk)
+    package.delete()
+    messages.success(request, f'Package for {package.receiver_name} is deleted successfully')
+    return redirect('shipment:n_dashboard')

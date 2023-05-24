@@ -29,7 +29,7 @@
                         <th scope="col"></th>
                       </tr>
                     </thead>
-                    {% for shipment in shipments %}
+                    {% for shipment in packages %}
                     <tbody>
                       <tr>
                         <th scope="row">{{forloop.counter}}.</th>
@@ -39,8 +39,8 @@
                         <td class="text-info"><strong>{{shipment.status}}</strong></td>
                         <td><strong>{{shipment.tracking_number}}</strong> </td>
                         <td>{{shipment.created}}</td>
-                        <td><a href="{% url 'shipment:update_shipment' shipment.id %}" class="btn btn-info btn-sm fw-bold text-white">Update</a></td>
-                        <td><a href="{% url 'shipment:delete_shipment' shipment.id %}" class="btn btn-danger btn-sm fw-bold">Delete</a></td>
+                        <td><a href="{% url 'shipment:update_package' shipment.id %}" class="btn btn-info btn-sm fw-bold text-white">Update</a></td>
+                        <td><a href="{% url 'shipment:delete_package' shipment.id %}" class="btn btn-danger btn-sm fw-bold">Delete</a></td>
                       </tr>
                     </tbody>
                     {% endfor %}
