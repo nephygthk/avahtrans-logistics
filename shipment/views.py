@@ -9,7 +9,6 @@ from django.views.generic.list import ListView
 from django.views.generic import CreateView
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
-from django.db.models import Q
 
 
 
@@ -53,6 +52,11 @@ class DashboardView(LoginRequiredMixin, ListView):
     context_object_name = 'shipments'
     paginate_by = 15
 
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_staff:
+            return HttpResponseRedirect(reverse_lazy('shipment:n_dashboard'))        
+        return super().dispatch(request, *args, **kwargs)
+
     def get_queryset(self, *args, **kwargs):
         qs = super(DashboardView, self).get_queryset(*args, **kwargs)
         qs = qs.order_by("-created")
@@ -62,6 +66,11 @@ class DashboardView(LoginRequiredMixin, ListView):
 class CreateShipmentView(LoginRequiredMixin, CreateView):
     template_name = 'shipment/add_shipment.html'
     form_class = ShipmentCreateForm
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_staff:
+            return HttpResponseRedirect(reverse_lazy('shipment:n_dashboard'))        
+        return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
         saved_shipment = form.save()
@@ -129,6 +138,11 @@ class NDashboardView(LoginRequiredMixin, ListView):
     context_object_name = 'packages'
     paginate_by = 15
 
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_staff:
+            return HttpResponseRedirect(reverse_lazy('shipment:dashboard'))        
+        return super().dispatch(request, *args, **kwargs)
+
     def get_queryset(self, *args, **kwargs):
         qs = super(NDashboardView, self).get_queryset(*args, **kwargs)
         qs = qs.order_by("-created")
@@ -139,6 +153,11 @@ class NCreateShipmentView(LoginRequiredMixin, CreateView):
     template_name = 'package/add_package.html'
     form_class = PackageCreateForm
 
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_staff:
+            return HttpResponseRedirect(reverse_lazy('shipment:dashboard'))        
+        return super().dispatch(request, *args, **kwargs)
+
     def form_valid(self, form):
         form.save()
         messages.success(self.request, 'Your package is added successfully')
@@ -148,6 +167,10 @@ class NCreateShipmentView(LoginRequiredMixin, CreateView):
 
 @login_required(login_url='shipment:login')
 def update_package(request, pk):
+
+    if not request.user.is_staff:
+        return redirect('shipment:dashboard')
+    
     package = Package.objects.get(pk=pk)
     form = PackageUpdateForm(request.POST or None, instance=package)
     if form.is_valid():
@@ -161,6 +184,10 @@ def update_package(request, pk):
 
 @login_required(login_url='shipment:login')
 def delete_package(request, pk):
+
+    if not request.user.is_staff:
+        return redirect('shipment:dashboard')
+    
     package = Package.objects.get(pk=pk)
     package.delete()
     messages.success(request, f'Package for {package.receiver_name} is deleted successfully')

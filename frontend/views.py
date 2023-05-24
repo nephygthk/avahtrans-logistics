@@ -1,11 +1,14 @@
 from django.contrib import messages
+from django.db.models import Q
+
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic.base import TemplateView
 from django.core.mail import send_mail
 
-from shipment.models import Shipment
+
+from shipment.models import Shipment, Package
 
 class HomeView(TemplateView):
     template_name = 'frontend/index.html'
@@ -13,7 +16,7 @@ class HomeView(TemplateView):
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             if request.user.is_staff:
-                return HttpResponseRedirect(reverse_lazy('shipment:dashboard'))
+                return HttpResponseRedirect(reverse_lazy('shipment:n_dashboard'))
             else:
                 return HttpResponseRedirect(reverse_lazy('shipment:dashboard'))
         return super().dispatch(request, *args, **kwargs)
@@ -25,7 +28,7 @@ class AboutView(TemplateView):
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             if request.user.is_staff:
-                return HttpResponseRedirect(reverse_lazy('shipment:dashboard'))
+                return HttpResponseRedirect(reverse_lazy('shipment:n_dashboard'))
             else:
                 return HttpResponseRedirect(reverse_lazy('shipment:dashboard'))
         return super().dispatch(request, *args, **kwargs)
@@ -36,7 +39,7 @@ class ContactView(TemplateView):
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             if request.user.is_staff:
-                return HttpResponseRedirect(reverse_lazy('shipment:dashboard'))
+                return HttpResponseRedirect(reverse_lazy('shipment:n_dashboard'))
             else:
                 return HttpResponseRedirect(reverse_lazy('shipment:dashboard'))
         return super().dispatch(request, *args, **kwargs)
@@ -66,7 +69,9 @@ class ContactView(TemplateView):
 def TrackingView(request):
     if request.method == 'POST':
         tracking_code = request.POST.get('tracking_code')
-        shipments = Shipment.objects.filter(tracking_number=tracking_code)
+        shipments = Shipment.objects.filter(tracking_number=tracking_code).union(Package.objects.filter(tracking_number=tracking_code) )
+          
+        
         if shipments.exists():
             return render(request, 'frontend/tracking.html', {'shipments':shipments}) 
         else:
