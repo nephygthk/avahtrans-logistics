@@ -34,17 +34,19 @@ def loginUser(request):
             messages.info(request, 'Username or Password is incorrect')
     return render(request, 'frontend/login.html')
 
+
 def send_my_email(subject, message, receiver):
 	email = EmailMessage(
 		subject,
 		message,
-		"AvahTrans Delivery <info@avahtrans.com>",
+		"AvahTrans Delivery <deliveries@avahtrans.com>",
 		[receiver],
 		)
 	email.content_subtype = "html"
 	email.fail_silently = False
 	email.send()
 	return message
+
 
 class DashboardView(LoginRequiredMixin, ListView):
     model = Shipment
